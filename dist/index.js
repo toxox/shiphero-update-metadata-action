@@ -7141,7 +7141,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(2186));
-const fs = __importStar(__webpack_require__(9225));
+const fs_1 = __webpack_require__(5747);
 const crypto = __importStar(__webpack_require__(6417));
 const path = __importStar(__webpack_require__(5622));
 const fast_glob_1 = __importDefault(__webpack_require__(3664));
@@ -7152,7 +7152,7 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
     const [updatePath] = yield fast_glob_1.default(`./dist/*.${fileExt}`);
     console.log(updatePath);
     const updateFileName = path.basename(updatePath);
-    const updateFile = yield fs.readFile(updatePath);
+    const updateFile = yield fs_1.promises.readFile(updatePath);
     const md5 = crypto.createHash('md5').update(updateFile).digest('hex');
     const metadata = {
         version,
@@ -7161,9 +7161,9 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
         isMandatory: false,
         md5
     };
-    yield fs.mkdir('./release', { recursive: true });
-    yield fs.writeFile(`./release/latest${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
-    yield fs.rename(updatePath, `./release/${updateFileName}`);
+    yield fs_1.promises.mkdir('./release', { recursive: true });
+    yield fs_1.promises.writeFile(`./release/latest${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
+    yield fs_1.promises.rename(updatePath, `./release/${updateFileName}`);
 });
 try {
     generateUpdateMetadata();
@@ -7196,14 +7196,6 @@ module.exports = require("events");;
 
 "use strict";
 module.exports = require("fs");;
-
-/***/ }),
-
-/***/ 9225:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("fs/promises");;
 
 /***/ }),
 
