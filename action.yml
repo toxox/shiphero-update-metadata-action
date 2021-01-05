@@ -1,11 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Generate Update Metadata'
+description: 'Creates app metadata and prepares files for S3 upload'
 inputs:
-  milliseconds: # change this
+  version:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  os:
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

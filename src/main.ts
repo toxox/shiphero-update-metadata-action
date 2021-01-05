@@ -1,19 +1,39 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as fs from 'fs/promises'
+import * as crypto from 'crypto'
+import * as path from 'path'
+import glob from 'fast-glob'
 
-async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+const generateUpdateMetadata = async (): Promise<void> => {
+  const isMac = core.getInput('os').startsWith('macos')
+  const version = core.getInput('version')
+  const fileExt = isMac ? 'zip' : 'exe'
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+  const [updatePath] = await glob(`./dist/*.${fileExt}`)
+  console.log(updatePath)
+  const updateFileName = path.basename(updatePath)
 
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    core.setFailed(error.message)
+  const updateFile = await fs.readFile(updatePath)
+  const md5 = crypto.createHash('md5').update(updateFile).digest('hex')
+
+  const metadata = {
+    version,
+    filePath: updateFileName,
+    releaseDate: new Date().toISOString(),
+    isMandatory: false,
+    md5
   }
+
+  await fs.mkdir('./release', {recursive: true})
+  await fs.writeFile(
+    `./release/latest${isMac ? '-mac' : ''}.json`,
+    JSON.stringify(metadata)
+  )
+  await fs.rename(updatePath, `./release/${updateFileName}`)
 }
 
-run()
+try {
+  generateUpdateMetadata()
+} catch (error) {
+  core.setFailed(error.message)
+}
