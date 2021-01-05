@@ -7161,6 +7161,7 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
         isMandatory: false,
         md5
     };
+    console.log(metadata);
     yield fs_1.promises.mkdir('./release', { recursive: true });
     yield fs_1.promises.writeFile(`./release/latest${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
     yield fs_1.promises.rename(updatePath, `./release/${updateFileName}`);

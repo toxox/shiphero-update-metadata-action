@@ -24,6 +24,8 @@ const generateUpdateMetadata = async (): Promise<void> => {
     md5
   }
 
+  console.log(metadata)
+
   await fs.mkdir('./release', {recursive: true})
   await fs.writeFile(
     `./release/latest${isMac ? '-mac' : ''}.json`,
