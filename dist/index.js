@@ -7150,7 +7150,6 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
     const version = core.getInput('version');
     const fileExt = isMac ? 'zip' : 'exe';
     const [updatePath] = yield fast_glob_1.default(`./dist/*.${fileExt}`);
-    console.log(updatePath);
     const updateFileName = path.basename(updatePath);
     const updateFile = yield fs_1.promises.readFile(updatePath);
     const md5 = crypto.createHash('md5').update(updateFile).digest('hex');
@@ -7161,7 +7160,6 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
         isMandatory: false,
         md5
     };
-    console.log(metadata);
     yield fs_1.promises.mkdir('./release', { recursive: true });
     yield fs_1.promises.writeFile(`./release/latest${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
     yield fs_1.promises.rename(updatePath, `./release/${updateFileName}`);

@@ -10,7 +10,6 @@ const generateUpdateMetadata = async (): Promise<void> => {
   const fileExt = isMac ? 'zip' : 'exe'
 
   const [updatePath] = await glob(`./dist/*.${fileExt}`)
-  console.log(updatePath)
   const updateFileName = path.basename(updatePath)
 
   const updateFile = await fs.readFile(updatePath)
@@ -23,8 +22,6 @@ const generateUpdateMetadata = async (): Promise<void> => {
     isMandatory: false,
     md5
   }
-
-  console.log(metadata)
 
   await fs.mkdir('./release', {recursive: true})
   await fs.writeFile(
