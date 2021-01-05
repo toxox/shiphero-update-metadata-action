@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import * as fs from 'fs/promises'
+import {promises as fs} from 'fs'
 import * as crypto from 'crypto'
 import * as path from 'path'
 import glob from 'fast-glob'
@@ -30,6 +30,9 @@ const generateUpdateMetadata = async (): Promise<void> => {
     JSON.stringify(metadata)
   )
   await fs.rename(updatePath, `./release/${updateFileName}`)
+
+  const a = await fs.readFile(`./release/${updateFileName}`)
+  console.log(a)
 }
 
 try {
