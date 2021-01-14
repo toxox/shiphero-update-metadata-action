@@ -7145,9 +7145,11 @@ const fs_1 = __webpack_require__(5747);
 const crypto = __importStar(__webpack_require__(6417));
 const path = __importStar(__webpack_require__(5622));
 const fast_glob_1 = __importDefault(__webpack_require__(3664));
+const CHANNEL_REGEX = /-(alpha|beta)\d*$/g;
 const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function* () {
     const isMac = core.getInput('os').startsWith('macos');
     const version = core.getInput('version');
+    const isMandatory = core.getInput('version');
     const fileExt = isMac ? 'zip' : 'exe';
     const [updatePath] = yield fast_glob_1.default(`./dist/*.${fileExt}`);
     const updateFileName = path.basename(updatePath);
@@ -7157,14 +7159,16 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
         version,
         filePath: updateFileName,
         releaseDate: new Date().toISOString(),
-        isMandatory: false,
+        isMandatory,
         md5
     };
+    const channelFromVersion = version.match(CHANNEL_REGEX);
+    const channel = channelFromVersion
+        ? channelFromVersion[0].replace(/\W/, '')
+        : 'latest';
     yield fs_1.promises.mkdir('./release', { recursive: true });
-    yield fs_1.promises.writeFile(`./release/latest${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
+    yield fs_1.promises.writeFile(`./release/${channel}${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
     yield fs_1.promises.rename(updatePath, `./release/${updateFileName}`);
-    const a = yield fs_1.promises.readFile(`./release/${updateFileName}`);
-    console.log(a);
 });
 try {
     generateUpdateMetadata();
