@@ -7149,7 +7149,7 @@ const CHANNEL_REGEX = /-(alpha|beta)\d*$/g;
 const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function* () {
     const isMac = core.getInput('os').startsWith('macos');
     const version = core.getInput('version');
-    const isMandatory = core.getInput('version');
+    const isMandatory = core.getInput('isMandatory');
     const fileExt = isMac ? 'zip' : 'exe';
     const [updatePath] = yield fast_glob_1.default(`./dist/*.${fileExt}`);
     const updateFileName = path.basename(updatePath);
@@ -7164,7 +7164,7 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
     };
     const channelFromVersion = version.match(CHANNEL_REGEX);
     const channel = channelFromVersion
-        ? channelFromVersion[0].replace(/\W/, '')
+        ? channelFromVersion[0].replace(/[^A-Za-z]/g, '')
         : 'latest';
     yield fs_1.promises.mkdir('./release', { recursive: true });
     yield fs_1.promises.writeFile(`./release/${channel}${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
