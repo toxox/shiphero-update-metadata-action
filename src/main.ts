@@ -9,7 +9,7 @@ const CHANNEL_REGEX = /-(alpha|beta)\d*$/g
 const generateUpdateMetadata = async (): Promise<void> => {
   const isMac = core.getInput('os').startsWith('macos')
   const version = core.getInput('version')
-  const isMandatory = core.getInput('version')
+  const isMandatory = core.getInput('isMandatory')
   const fileExt = isMac ? 'zip' : 'exe'
 
   const [updatePath] = await glob(`./dist/*.${fileExt}`)
@@ -28,7 +28,7 @@ const generateUpdateMetadata = async (): Promise<void> => {
 
   const channelFromVersion = version.match(CHANNEL_REGEX)
   const channel = channelFromVersion
-    ? channelFromVersion[0].replace(/\W/, '')
+    ? channelFromVersion[0].replace(/[^A-Za-z]/g, '')
     : 'latest'
 
   await fs.mkdir('./release', {recursive: true})
