@@ -6,14 +6,35 @@ import glob from 'fast-glob'
 
 const CHANNEL_REGEX = /-(alpha|beta)\d*$/g
 
+const findFileInPath = async ({
+  fileExt,
+  searchPath = './dist'
+}: {
+  fileExt: string
+  searchPath?: string
+}): Promise<[string | null, string | null]> => {
+  const searchResult = await glob(`${searchPath}/*.${fileExt}`)
+
+  if (!searchResult.length) {
+    return [null, null]
+  }
+
+  const filePath = searchResult[0]
+  const fileName = path.basename(filePath)
+
+  return [filePath, fileName]
+}
+
 const generateUpdateMetadata = async (): Promise<void> => {
   const isMac = core.getInput('os').startsWith('macos')
   const version = core.getInput('version')
   const isMandatory = core.getInput('isMandatory')
   const fileExt = isMac ? 'zip' : 'exe'
 
-  const [updatePath] = await glob(`./dist/*.${fileExt}`)
-  const updateFileName = path.basename(updatePath)
+  const [updatePath, updateFileName] = await findFileInPath({fileExt})
+  const [dmgPath, dmgFileName] = await findFileInPath({fileExt: 'dmg'})
+
+  if (!updatePath) return
 
   const updateFile = await fs.readFile(updatePath)
   const md5 = crypto.createHash('md5').update(updateFile).digest('hex')
@@ -21,6 +42,7 @@ const generateUpdateMetadata = async (): Promise<void> => {
   const metadata = {
     version,
     filePath: updateFileName,
+    dmgFilePath: dmgFileName,
     releaseDate: new Date().toISOString(),
     isMandatory,
     md5
@@ -37,6 +59,10 @@ const generateUpdateMetadata = async (): Promise<void> => {
     JSON.stringify(metadata)
   )
   await fs.rename(updatePath, `./release/${updateFileName}`)
+
+  if (dmgPath) {
+    await fs.rename(dmgPath, `./release/${dmgFileName}`)
+  }
 }
 
 try {
