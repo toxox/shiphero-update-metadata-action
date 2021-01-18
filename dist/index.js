@@ -7146,18 +7146,30 @@ const crypto = __importStar(__webpack_require__(6417));
 const path = __importStar(__webpack_require__(5622));
 const fast_glob_1 = __importDefault(__webpack_require__(3664));
 const CHANNEL_REGEX = /-(alpha|beta)\d*$/g;
+const findFileInPath = ({ fileExt, searchPath = './dist' }) => __awaiter(void 0, void 0, void 0, function* () {
+    const searchResult = yield fast_glob_1.default(`${searchPath}/*.${fileExt}`);
+    if (!searchResult.length) {
+        return [null, null];
+    }
+    const filePath = searchResult[0];
+    const fileName = path.basename(filePath);
+    return [filePath, fileName];
+});
 const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function* () {
     const isMac = core.getInput('os').startsWith('macos');
     const version = core.getInput('version');
     const isMandatory = core.getInput('isMandatory');
     const fileExt = isMac ? 'zip' : 'exe';
-    const [updatePath] = yield fast_glob_1.default(`./dist/*.${fileExt}`);
-    const updateFileName = path.basename(updatePath);
+    const [updatePath, updateFileName] = yield findFileInPath({ fileExt });
+    const [dmgPath, dmgFileName] = yield findFileInPath({ fileExt: 'dmg' });
+    if (!updatePath)
+        return;
     const updateFile = yield fs_1.promises.readFile(updatePath);
     const md5 = crypto.createHash('md5').update(updateFile).digest('hex');
     const metadata = {
         version,
         filePath: updateFileName,
+        dmgFilePath: dmgFileName,
         releaseDate: new Date().toISOString(),
         isMandatory,
         md5
@@ -7169,6 +7181,9 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
     yield fs_1.promises.mkdir('./release', { recursive: true });
     yield fs_1.promises.writeFile(`./release/${channel}${isMac ? '-mac' : ''}.json`, JSON.stringify(metadata));
     yield fs_1.promises.rename(updatePath, `./release/${updateFileName}`);
+    if (dmgPath) {
+        yield fs_1.promises.rename(dmgPath, `./release/${dmgFileName}`);
+    }
 });
 try {
     generateUpdateMetadata();
