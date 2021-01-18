@@ -7165,14 +7165,14 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
     if (!updatePath)
         return;
     const updateFile = yield fs_1.promises.readFile(updatePath);
-    const md5 = crypto.createHash('md5').update(updateFile).digest('hex');
+    const sha512 = crypto.createHash('sha512').update(updateFile).digest('hex');
     const metadata = {
         version,
         filePath: updateFileName,
         dmgFilePath: dmgFileName,
         releaseDate: new Date().toISOString(),
         isMandatory,
-        md5
+        sha512
     };
     const channelFromVersion = version.match(CHANNEL_REGEX);
     const channel = channelFromVersion
