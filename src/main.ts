@@ -37,7 +37,7 @@ const generateUpdateMetadata = async (): Promise<void> => {
   if (!updatePath) return
 
   const updateFile = await fs.readFile(updatePath)
-  const md5 = crypto.createHash('md5').update(updateFile).digest('hex')
+  const sha512 = crypto.createHash('sha512').update(updateFile).digest('hex')
 
   const metadata = {
     version,
@@ -45,7 +45,7 @@ const generateUpdateMetadata = async (): Promise<void> => {
     dmgFilePath: dmgFileName,
     releaseDate: new Date().toISOString(),
     isMandatory,
-    md5
+    sha512
   }
 
   const channelFromVersion = version.match(CHANNEL_REGEX)
