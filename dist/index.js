@@ -7158,7 +7158,7 @@ const findFileInPath = ({ fileExt, searchPath = './dist' }) => __awaiter(void 0,
 const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function* () {
     const isMac = core.getInput('os').startsWith('macos');
     const version = core.getInput('version');
-    const isMandatory = core.getInput('isMandatory');
+    const isMandatory = core.getInput('isMandatory') === 'true';
     const fileExt = isMac ? 'zip' : 'exe';
     const [updatePath, updateFileName] = yield findFileInPath({ fileExt });
     const [dmgPath, dmgFileName] = yield findFileInPath({ fileExt: 'dmg' });
