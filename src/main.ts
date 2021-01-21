@@ -48,6 +48,8 @@ const generateUpdateMetadata = async (): Promise<void> => {
     sha512
   }
 
+  console.log(metadata)
+
   const channelFromVersion = version.match(CHANNEL_REGEX)
   const channel = channelFromVersion
     ? channelFromVersion[0].replace(/[^A-Za-z]/g, '')
