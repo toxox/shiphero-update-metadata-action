@@ -29,6 +29,7 @@ const generateUpdateMetadata = async (): Promise<void> => {
   const isMac = core.getInput('os').startsWith('macos')
   const version = core.getInput('version')
   const isMandatory = core.getInput('isMandatory') === 'true'
+  const accounts = core.getInput('accounts')
   const fileExt = isMac ? 'zip' : 'exe'
 
   const [updatePath, updateFileName] = await findFileInPath({fileExt})
@@ -45,7 +46,8 @@ const generateUpdateMetadata = async (): Promise<void> => {
     dmgFilePath: dmgFileName,
     releaseDate: new Date().toISOString(),
     isMandatory,
-    sha512
+    sha512,
+    accounts
   }
 
   console.log(metadata)

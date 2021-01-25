@@ -19,6 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: "shiphero-update-metadata-action"
+
+      - name: debug
+        run: |
+          mkdir dist && touch dist/test.zip && touch dist/test.dmg
+
       - uses: ./
         with:
-          milliseconds: 1000
+          version: 1
+          os: macos
+          isMandatory: false
+          accounts: {}
+
+      - run: ls -a release

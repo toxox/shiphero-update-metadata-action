@@ -7,6 +7,8 @@ inputs:
     required: true
   isMandatory:
     required: false
+  accounts:
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

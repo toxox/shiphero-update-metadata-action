@@ -7148,6 +7148,7 @@ const fast_glob_1 = __importDefault(__webpack_require__(3664));
 const CHANNEL_REGEX = /-(alpha|beta)\d*$/g;
 const findFileInPath = ({ fileExt, searchPath = './dist' }) => __awaiter(void 0, void 0, void 0, function* () {
     const searchResult = yield fast_glob_1.default(`${searchPath}/*.${fileExt}`);
+    console.log(searchResult);
     if (!searchResult.length) {
         return [null, null];
     }
@@ -7162,6 +7163,11 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
     const fileExt = isMac ? 'zip' : 'exe';
     const [updatePath, updateFileName] = yield findFileInPath({ fileExt });
     const [dmgPath, dmgFileName] = yield findFileInPath({ fileExt: 'dmg' });
+    console.log(updatePath);
+    console.log(updatePath);
+    console.log(updatePath);
+    console.log(updatePath);
+    console.log(updatePath);
     if (!updatePath)
         return;
     const updateFile = yield fs_1.promises.readFile(updatePath);
