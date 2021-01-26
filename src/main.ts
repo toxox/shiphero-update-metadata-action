@@ -29,7 +29,7 @@ const generateUpdateMetadata = async (): Promise<void> => {
   const isMac = core.getInput('os').startsWith('macos')
   const version = core.getInput('version')
   const isMandatory = core.getInput('isMandatory') === 'true'
-  const accounts = core.getInput('accounts')
+  const accounts = JSON.parse(core.getInput('accounts'))
   const fileExt = isMac ? 'zip' : 'exe'
 
   const [updatePath, updateFileName] = await findFileInPath({fileExt})
