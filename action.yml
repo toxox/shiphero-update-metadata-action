@@ -9,6 +9,8 @@ inputs:
     required: false
   accounts:
     required: true
+  disabledAccounts:
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
