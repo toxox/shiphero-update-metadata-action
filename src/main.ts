@@ -30,6 +30,7 @@ const generateUpdateMetadata = async (): Promise<void> => {
   const version = core.getInput('version')
   const isMandatory = core.getInput('isMandatory') === 'true'
   const accounts = JSON.parse(core.getInput('accounts'))
+  const disabledAccounts = JSON.parse(core.getInput('disabledAccounts'))
   const fileExt = isMac ? 'zip' : 'exe'
 
   const [updatePath, updateFileName] = await findFileInPath({fileExt})
@@ -47,7 +48,8 @@ const generateUpdateMetadata = async (): Promise<void> => {
     releaseDate: new Date().toISOString(),
     isMandatory,
     sha512,
-    accounts
+    accounts,
+    disabledAccounts
   }
 
   console.log(metadata)
