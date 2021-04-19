@@ -7160,6 +7160,7 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
     const version = core.getInput('version');
     const isMandatory = core.getInput('isMandatory') === 'true';
     const accounts = JSON.parse(core.getInput('accounts'));
+    const disabledAccounts = JSON.parse(core.getInput('disabledAccounts'));
     const fileExt = isMac ? 'zip' : 'exe';
     const [updatePath, updateFileName] = yield findFileInPath({ fileExt });
     const [dmgPath, dmgFileName] = yield findFileInPath({ fileExt: 'dmg' });
@@ -7174,7 +7175,8 @@ const generateUpdateMetadata = () => __awaiter(void 0, void 0, void 0, function*
         releaseDate: new Date().toISOString(),
         isMandatory,
         sha512,
-        accounts
+        accounts,
+        disabledAccounts
     };
     console.log(metadata);
     const channelFromVersion = version.match(CHANNEL_REGEX);
